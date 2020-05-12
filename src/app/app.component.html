@@ -62,6 +62,7 @@
                   Country: {{ name }}
                   <br>
                   Date: {{ date | date }}
+                  <br>
                 </h4>
               </div>
               <div class="row">
@@ -76,8 +77,7 @@
                   [showXAxisLabel]="showXAxisLabel"
                   [showYAxisLabel]="showYAxisLabel"
                   [xAxisLabel]="xAxisLabel"
-                  [yAxisLabel]="yAxisLabel"
-                  (select)="onSelect($event)">
+                  [yAxisLabel]="yAxisLabel">
                 </ngx-charts-bar-vertical>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Data, GlobalData, ResponseData} from './models/data';
-import {map} from 'rxjs/operators';
+import { map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {FormControl} from '@angular/forms';
 
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   title = 'COVID-19';
   data: Data[];
-  single: [{ name: string; value: number }, { name: string; value: number }, { name: string; value: number }, { name: string; value: number }, { name: string; value: number }, { name: string; value: number }];
+  single: { name: string; value: number }[];
 
   view: any[] = [750, 550];
   // options for the chart
@@ -49,6 +49,8 @@ export class AppComponent implements OnInit {
       })
     ).subscribe((res) => {
       this.cnames = this.data.map(i => i.Country);
+    }, (error) => {
+      alert('Unable to Fetch Data! Please try again after sometime');
     });
     this.filteredOptions = this.myControl.valueChanges
       .pipe(map(value => this._filter(value))
@@ -59,15 +61,6 @@ export class AppComponent implements OnInit {
     const filterValue = value.toLowerCase();
 
     return this.cnames.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  selected(event) {
-    const target = event.source.selected._element.nativeElement;
-    const selectedData = {
-      value: event.value,
-      text: target.innerText.trim()
-    };
-    console.log(selectedData);
   }
   OnInput(event: any) {
 
@@ -106,6 +99,9 @@ export class AppComponent implements OnInit {
           value: this.data[this.index].NewRecovered
         }
       ];
+    }, (e) => {
+      console.log(e.message);
+      alert('Something Went Wrong! Please try again');
     });
   }
 }
