@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Data, GlobalData, ResponseData} from './models/data';
-import { map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {FormControl} from '@angular/forms';
 
@@ -41,16 +41,19 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient) {
   }
+
   ngOnInit() {
     this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
       map(res => {
         this.data = res.Countries;
         this.global = res.Global;
+        this.cnames = this.data.map(i => i.Country);
       })
     ).subscribe((res) => {
-      this.cnames = this.data.map(i => i.Country);
+      // this.cnames = this.data.map(i => i.Country);
     }, (error) => {
-      alert('Unable to Fetch Data! Please try again after sometime');
+      alert('Server is Busy. Please refresh your page');
+      console.log(error);
     });
     this.filteredOptions = this.myControl.valueChanges
       .pipe(map(value => this._filter(value))
@@ -62,7 +65,8 @@ export class AppComponent implements OnInit {
 
     return this.cnames.filter(option => option.toLowerCase().includes(filterValue));
   }
-  OnInput(event: any) {
+
+   OnInput(event: any) {
 
     this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
       map(res => {
