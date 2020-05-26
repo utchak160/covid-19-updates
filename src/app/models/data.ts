@@ -24,3 +24,6 @@ export class Data {
   TotalRecovered: number;
   Date: Date;
 }
+export interface Names {
+  Country: string;
+}

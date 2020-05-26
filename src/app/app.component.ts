@@ -4,6 +4,8 @@ import {Data, GlobalData, ResponseData} from './models/data';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {FormControl} from '@angular/forms';
+import {DataService} from './services/data.service';
+import {AlertService} from './services/alert.service';
 
 
 @Component({
@@ -39,21 +41,33 @@ export class AppComponent implements OnInit {
     domain: ['#9370DB', '#87CEFA', '#FA8072', '#FF7F50', '#90EE90', '#9370DB']
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private dataService: DataService,
+              private alertService: AlertService,
+              private http: HttpClient) {
   }
 
   ngOnInit() {
-    this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
-      map(res => {
-        this.data = res.Countries;
-        this.global = res.Global;
-        this.cnames = this.data.map(i => i.Country);
-      })
-    ).subscribe((res) => {
-      // this.cnames = this.data.map(i => i.Country);
-    }, (error) => {
-      alert('Server is Busy. Please refresh your page');
+    // this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
+    //   map(res => {
+    //     this.data = res.Countries;
+    //     this.global = res.Global;
+    //     this.cnames = this.data.map(i => i.Country);
+    //   })
+    // ).subscribe((res) => {
+    //   // this.cnames = this.data.map(i => i.Country);
+    // }, (error) => {
+    //   alert('Server is Busy. Please refresh your page');
+    //   console.log(error);
+    // });
+    this.dataService.getData().subscribe((res) => {
+      console.log('[Names]', res);
+      this.cnames = res.map(i => i.Country);
+    });
+    this.dataService.getGlobalData().subscribe((res) => {
+      this.global = res;
+    }, error => {
       console.log(error);
+      this.alertService.error('Server is Busy. Please refresh your page');
     });
     this.filteredOptions = this.myControl.valueChanges
       .pipe(map(value => this._filter(value))
@@ -67,7 +81,6 @@ export class AppComponent implements OnInit {
   }
 
    OnInput(event: any) {
-
     this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
       map(res => {
         this.data = res.Countries;
@@ -105,7 +118,7 @@ export class AppComponent implements OnInit {
       ];
     }, (e) => {
       console.log(e.message);
-      alert('Something Went Wrong! Please try again');
+      this.alertService.error('Something Went Wrong! Please try again');
     });
   }
 }
