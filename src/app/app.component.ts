@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Data, GlobalData, ResponseData} from './models/data';
+import {Data, GlobalData} from './models/data';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {FormControl} from '@angular/forms';
@@ -16,7 +15,6 @@ import {AlertService} from './services/alert.service';
 export class AppComponent implements OnInit {
   name = '';
   date: Date;
-  index: number;
   cnames: string[];
   global: GlobalData;
   filteredOptions: Observable<string[]>;
@@ -42,26 +40,12 @@ export class AppComponent implements OnInit {
   };
 
   constructor(private dataService: DataService,
-              private alertService: AlertService,
-              private http: HttpClient) {
+              private alertService: AlertService) {
   }
 
   ngOnInit() {
-    // this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
-    //   map(res => {
-    //     this.data = res.Countries;
-    //     this.global = res.Global;
-    //     this.cnames = this.data.map(i => i.Country);
-    //   })
-    // ).subscribe((res) => {
-    //   // this.cnames = this.data.map(i => i.Country);
-    // }, (error) => {
-    //   alert('Server is Busy. Please refresh your page');
-    //   console.log(error);
-    // });
-    this.dataService.getData().subscribe((res) => {
-      console.log('[Names]', res);
-      this.cnames = res.map(i => i.Country);
+    this.dataService.getNames().subscribe((res) => {
+      this.cnames = res;
     });
     this.dataService.getGlobalData().subscribe((res) => {
       this.global = res;
@@ -79,41 +63,34 @@ export class AppComponent implements OnInit {
 
     return this.cnames.filter(option => option.toLowerCase().includes(filterValue));
   }
-
-   OnInput(event: any) {
-    this.http.get<ResponseData>('https://api.covid19api.com/summary').pipe(
-      map(res => {
-        this.data = res.Countries;
-      })
-    ).subscribe((res) => {
-      this.name = event.target.value;
-      this.index = this.cnames.indexOf(this.name);
-      this.date = this.data[this.index].Date;
-      this.name = this.data[this.index].Country + `(${this.data[this.index].CountryCode})`;
+  onInput(event: any) {
+    this.dataService.getCountryData(event.target.value).subscribe((res) => {
+      this.date = res.Date;
+      this.name = res.Country + `(${res.CountryCode})`;
       this.single = [
         {
           name: 'Total Confirmed',
-          value: this.data[this.index].TotalConfirmed
+          value: res.TotalConfirmed
         },
         {
           name: 'Total Deaths',
-          value: this.data[this.index].TotalDeaths
+          value: res.TotalDeaths
         },
         {
           name: 'Total Recovered',
-          value: this.data[this.index].TotalRecovered
+          value: res.TotalRecovered
         },
         {
           name: 'New Confirmed',
-          value: this.data[this.index].NewConfirmed
+          value: res.NewConfirmed
         },
         {
           name: 'New Deaths',
-          value: this.data[this.index].NewDeaths
+          value: res.NewDeaths
         },
         {
           name: 'New Recovered',
-          value: this.data[this.index].NewRecovered
+          value: res.NewRecovered
         }
       ];
     }, (e) => {

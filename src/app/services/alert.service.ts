@@ -10,14 +10,14 @@ export class AlertService {
 
   success(message: string) {
     this.matSnackBar.open(message, 'Close', {
-      duration: 500,
+      duration: 2000,
       horizontalPosition: 'center',
-      verticalPosition: 'bottom'
+      verticalPosition: 'top'
     });
   }
   error(message: string) {
-    this.matSnackBar.open(message, 'Close', {
-      duration: 500,
+    this.matSnackBar.open(message, 'Undo', {
+      duration: 2000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom'
     });
