@@ -21,7 +21,6 @@ export class AppComponent implements OnInit {
   myControl = new FormControl();
 
   title = 'COVID-19';
-  data: Data[];
   single: { name: string; value: number }[];
 
   view: any[] = [750, 550];
