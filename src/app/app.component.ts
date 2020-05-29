@@ -23,7 +23,8 @@ export class AppComponent implements OnInit {
   title = 'COVID-19';
   single: { name: string; value: number }[];
 
-  view: any[] = [750, 550];
+  // view: any[] = [750, 550];
+  view: any[];
   // options for the chart
   showXAxis = true;
   showYAxis = true;
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
 
   constructor(private dataService: DataService,
               private alertService: AlertService) {
+    this.view = [innerWidth / 1.6, 450];
   }
 
   ngOnInit() {
@@ -96,5 +98,9 @@ export class AppComponent implements OnInit {
       console.log(e.message);
       this.alertService.error('Something Went Wrong! Please try again');
     });
+  }
+
+  onResize(event) {
+    this.view = [event.target.innerWidth / 1.35, 400];
   }
 }

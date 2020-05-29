@@ -7,7 +7,7 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-4 col-sm-12" *ngIf="global">
+      <div class="col-lg-4 col-md-12" *ngIf="global">
         <mat-card class="example-card">
           <mat-card-header>
             <div mat-card-avatar>
@@ -35,7 +35,7 @@
           </mat-card-content>
         </mat-card>
       </div>
-      <div class="col-md-8 col-sm-12">
+      <div class="col-lg-8 col-md-12">
         <div class="d-flex justify-content-center">
           <form class="example-form">
             <mat-form-field class="example-full-width">
@@ -67,6 +67,7 @@
               </div>
               <div class="row">
                 <ngx-charts-bar-vertical
+                  (window:resize)="onResize($event)"
                   [view]="view"
                   [scheme]="colorScheme"
                   [results]="single"
