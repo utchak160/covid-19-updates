@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   title = 'COVID-19';
   single: { name: string; value: number }[];
 
-  // view: any[] = [750, 550];
   view: any[];
   // options for the chart
   showXAxis = true;
